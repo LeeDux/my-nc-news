@@ -17,13 +17,40 @@ afterAll(() => {
 });
 
 describe("GET /api", () => {
-  test.only("200: Responds with an object detailing the documentation for each endpoint", () => {
+  test("200: Responds with an object detailing the documentation for each endpoint", () => {
     return request(app)
       .get("/api")
       .expect(200)
       .then(({ body }) => {
         const { endpoint } = body;
         expect(endpoint).toEqual(endpointsJson);
+      });
+  });
+});
+
+describe("GET /api/topics", () => {
+  test("200: Responds with an object detailing the topics data", () => {
+    return request(app)
+      .get("/api/topics")
+      .expect(200)
+      .then(({ body }) => {
+        console.log(body);
+        const { topics } = body;
+        expect(Array.isArray(topics)).toBe(true);
+        topics.forEach((topic) => {
+          expect(topic).toMatchObject({
+            slug: expect.any(String),
+            description: expect.any(String),
+          });
+        });
+      });
+  });
+  test.only("404: should get error 404 if invalid input", () => {
+    return request(app)
+      .get("/api/doesnotexist")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
       });
   });
 });
