@@ -35,6 +35,14 @@ Added catch all route handler to app.js to catch invalid path. (source: https://
 Get /api/articles
 
 fetches articles data
+returns an array of objects in descending order by date.
+
+Used COALESCE to add default 0 to articles with no votes. Uses the second argument if first argument is null. Source: https://www.postgresql.org/docs/current/functions-conditional.html#FUNCTIONS-COALESCE-NVL-IFNULL
+
+Used Count and a Join to the comments data to add in comment count, GROUP BY is paired with count to ensure one row per article.
+
+Tests that it:
+responds with an array of object containing the correct keys and in descending order.
 
 Get /api/articles/:article_id
 

@@ -5,7 +5,7 @@ const {
   getApi,
   getTopics,
   getArticleById,
-  getArticle,
+  getAllArticles,
 } = require("../db/seeds/api.controller");
 console.log("I am in app");
 
@@ -13,7 +13,7 @@ app.get("/api", getApi);
 
 app.get("/api/topics", getTopics);
 
-app.get("/api/articles", getArticle);
+app.get("/api/articles", getAllArticles);
 
 app.get("/api/articles/:article_id", getArticleById);
 

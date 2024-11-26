@@ -1,7 +1,11 @@
 const endpointsJson = require("../../endpoints.json");
 const articles = require("../data/test-data/articles");
 const { checkArticleExists } = require("./api.articles.model");
-const { selectTopics, selectArticle } = require("./api.model");
+const {
+  selectTopics,
+  selectArticle,
+  selectAllArticles,
+} = require("./api.model");
 
 console.log("in controller");
 
@@ -23,17 +27,16 @@ exports.getTopics = (req, res, next) => {
     .catch(next);
 };
 
-exports.getArticle = (req, res, next) => {
-  const { article_id, sort_by } = req.query;
-  const promises = [selectArticle(article_id, sort_by)];
-  if (article_id) {
-    promises.push(checkArticleExists(article_id));
-  }
-  Promise.all(promises)
-    .then(([articles]) => {
-      res.send(200).send({ articles });
+exports.getAllArticles = (req, res, next) => {
+  selectAllArticles()
+    .then((articles) => {
+      console.log(articles, "<---articles fetched should be 13");
+      res.status(200).send({ articles });
     })
-    .catch(next);
+    .catch((err) => {
+      console.error("Error fetching articles:", err);
+      next(err);
+    });
 };
 
 exports.getArticleById = (req, res, next) => {
