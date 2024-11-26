@@ -32,6 +32,23 @@ Updated middleware in the controller to pass error to the global error handler.
 
 Added catch all route handler to app.js to catch invalid path. (source: https://www.geeksforgeeks.org/how-to-redirect-404-errors-to-a-page-in-express-js/)
 
+Get /api/articles
+
+fetches articles data
+
+Get /api/articles/:article_id
+
+app updated with get for the above endpoint.
+
+fetches a single article by id
+
+error handling in the controller to handle 404 not found
+
+tests that article has valid ID using .toBeDefined
+test for 400 bad request
+test that the article is received and is defined
+tests that article is an object containing the correct keys
+
 ---
 
 This portfolio project was created as part of a Digital Skills Bootcamp in Software Engineering provided by [Northcoders](https://northcoders.com/)

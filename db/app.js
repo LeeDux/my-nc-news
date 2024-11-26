@@ -1,12 +1,21 @@
 const express = require("express");
 const app = express();
 app.use(express.json());
-const { getApi, getTopics } = require("../db/seeds/api.controller");
+const {
+  getApi,
+  getTopics,
+  getArticleById,
+  getArticle,
+} = require("../db/seeds/api.controller");
 console.log("I am in app");
 
 app.get("/api", getApi);
 
 app.get("/api/topics", getTopics);
+
+app.get("/api/articles", getArticle);
+
+app.get("/api/articles/:article_id", getArticleById);
 
 app.all("*", (req, res) => {
   res.status(404).send({ msg: "Not Found" });

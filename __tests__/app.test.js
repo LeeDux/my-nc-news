@@ -45,9 +45,40 @@ describe("GET /api/topics", () => {
         });
       });
   });
-  test.only("404: should get error 404 if invalid input", () => {
+  test("404: should get error 404 if invalid input", () => {
     return request(app)
       .get("/api/doesnotexist")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Not Found");
+      });
+  });
+});
+
+describe("Get /api/articles/:article_id", () => {
+  test("status 200: accepts a query to return only articles with that article id", () => {
+    return request(app)
+      .get("/api/articles/2")
+      .expect(200)
+      .then(({ body }) => {
+        const { article } = body;
+        expect(article).toBeDefined();
+        expect(article.article_id).toBe(2);
+        expect(article).toMatchObject({
+          article_id: expect.any(Number),
+          title: expect.any(String),
+          topic: expect.any(String),
+          author: expect.any(String),
+          body: expect.any(String),
+          created_at: expect.any(String),
+          votes: expect.any(Number),
+          article_img_url: expect.any(String),
+        });
+      });
+  });
+  test.only("404: should return 404 if article not found", () => {
+    return request(app)
+      .get("/api/articles/2024")
       .expect(404)
       .then(({ body }) => {
         expect(body.msg).toBe("Not Found");

@@ -25,5 +25,24 @@
         }
       ]
     }
+  },
+
+  "GET /api/articles/:article_id": {
+    "description": "Fetches a single article by its ID",
+    "params": {
+      "article_id": "The unique ID of the article (must be a number)"
+    },
+    "example response": {
+      "article": {
+        "article_id": "The ID of the article",
+        "title": "The title of the article",
+        "author": "The author of the article",
+        "body": "The content of the article",
+        "topic": "The topic of the article",
+        "created_at": "The date and time when the article was created (ISO string)",
+        "votes": "The number of votes the article has received",
+        "article_img_url": "URL to the image associated with the article"
+      }
+    }
   }
 }
