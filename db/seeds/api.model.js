@@ -30,3 +30,26 @@ exports.selectArticle = (article_id) => {
     return rows;
   });
 };
+
+exports.selectAllArticles = () => {
+  return db
+    .query(
+      `SELECT
+        articles.article_id,
+        articles.title,
+        articles.topic,
+        articles.author,
+        articles.created_at,
+        COALESCE(articles.votes, 0) AS votes,
+        COALESCE(COUNT(comments.comment_id), 0) AS comment_count,  
+        articles.article_img_url
+      FROM articles
+      LEFT JOIN comments ON comments.article_id = articles.article_id
+      GROUP BY articles.article_id
+      ORDER BY articles.created_at DESC`
+    )
+    .then(({ rows }) => {
+      //console.log(result);
+      return rows;
+    });
+};

@@ -5,6 +5,7 @@ const app = require("../db/app.js");
 const db = require("../db/connection"); //look here
 const testData = require("../db/data/test-data");
 const seed = require("../db/seeds/seed");
+const articles = require("../db/data/test-data/articles.js");
 
 /* Set up your beforeEach & afterAll functions here */
 
@@ -76,12 +77,40 @@ describe("Get /api/articles/:article_id", () => {
         });
       });
   });
-  test.only("404: should return 404 if article not found", () => {
+  test("404: should return 404 if article not found", () => {
     return request(app)
       .get("/api/articles/2024")
       .expect(404)
       .then(({ body }) => {
         expect(body.msg).toBe("Not Found");
+      });
+  });
+});
+
+describe("/api/articles", () => {
+  test("200: should respond with all articles in descending order", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then(({ body }) => {
+        const { articles } = body;
+        expect(Array.isArray(articles)).toBe(true);
+        expect(articles).toHaveLength(testData.articleData.length);
+        articles.forEach((article) => {
+          expect(article).toHaveProperty("title");
+          expect(article).toHaveProperty("topic");
+          expect(article).toHaveProperty("author");
+          expect(article).toHaveProperty("created_at");
+          expect(article).toHaveProperty("votes");
+          expect(article.votes).toBeDefined();
+          expect(article).toHaveProperty("comment_count");
+          expect(article).toHaveProperty("article_img_url");
+        });
+        for (let i = 0; i < articles.length - 1; i++) {
+          const currentArticle = new Date(articles[i].created_at);
+          const nextArticle = new Date(articles[i + 1].created_at);
+          expect(currentArticle >= nextArticle).toBe(true);
+        }
       });
   });
 });
