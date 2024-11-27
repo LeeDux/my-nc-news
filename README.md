@@ -57,6 +57,17 @@ test for 400 bad request
 test that the article is received and is defined
 tests that article is an object containing the correct keys
 
+Get /api/articles/:article_id/comments
+
+model: selectComments takse article_id as its argument to find comments for the relevant article. It uses sqlQuery to select keys from comments and orders in descending order.
+
+controller: getComments selects comments by invoking the selecComments function with the req param of article_id. Has error handling to return 404 if no comments found. The comments are sent as array under the key of comments in the response body.
+
+error handling in the controller getComments function and in the app with app.use
+
+test that the comments relating to the article_id are all recieved and in descending order.
+tests that comments is an array of objects containing the correct keys.
+
 ---
 
 This portfolio project was created as part of a Digital Skills Bootcamp in Software Engineering provided by [Northcoders](https://northcoders.com/)

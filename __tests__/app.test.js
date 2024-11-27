@@ -114,3 +114,35 @@ describe("/api/articles", () => {
       });
   });
 });
+
+describe("getComments", () => {
+  test("200: responds with an array of comments for the given article_id", () => {
+    //const articleId = 1
+    return request(app)
+      .get("/api/articles/1/comments")
+      .expect(200)
+      .then(({ body }) => {
+        const { comments } = body;
+        expect(Array.isArray(comments)).toBe(true);
+        console.log(testData.commentData, "<--testData comments array");
+        console.log(comments, "<--comments array");
+        expect(comments).toHaveLength(
+          testData.commentData.filter((comment) => comment.article_id === 1)
+            .length
+        );
+        comments.forEach((comment) => {
+          expect(comment).toHaveProperty("comment_id");
+          expect(comment).toHaveProperty("votes");
+          expect(comment).toHaveProperty("created_at");
+          expect(comment).toHaveProperty("author");
+          expect(comment).toHaveProperty("body");
+          expect(comment).toHaveProperty("article_id");
+        });
+        for (let i = 0; i < comments.length - 1; i++) {
+          const currentComment = new Date(comments[i].created_at);
+          const nextComment = new Date(comments[i + 1].created_at);
+          expect(currentComment >= nextComment).toBe(true);
+        }
+      });
+  });
+});

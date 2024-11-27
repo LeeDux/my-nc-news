@@ -6,6 +6,7 @@ const {
   selectArticle,
   selectAllArticles,
 } = require("./api.model");
+const { selectComments } = require("./api.comments.model");
 
 console.log("in controller");
 
@@ -51,6 +52,22 @@ exports.getArticleById = (req, res, next) => {
         return next(error);
       }
       res.status(200).send({ article: article[0] });
+    })
+    .catch(next);
+};
+
+exports.getComments = (req, res, next) => {
+  const { article_id } = req.params;
+  selectComments(article_id)
+    .then((comments) => {
+      console.log(comments, "<--article in controller");
+      if (comments.length === 0 || !comments) {
+        const error = new Error("Not Found");
+        error.status = 404;
+        console.log(error, "<--err in the controller");
+        return next(error);
+      }
+      res.status(200).send({ comments });
     })
     .catch(next);
 };
