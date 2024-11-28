@@ -45,5 +45,26 @@
         "article_img_url": "URL to the image associated with the article"
       }
     }
+  },
+
+  "POST /api/articles/:article_id/comments": {
+    "description": "Adds a comment to the specified article.",
+    "request_body": {
+      "username": "string (required) - The username of the user posting the comment.",
+      "body": "string (required) - The content of the comment."
+    },
+    "responses": {
+      "201": {
+        "description": "Successfully created comment.",
+        "body": {
+          "comment": {
+            "username": "string",
+            "body": "string",
+            "article_id": "integer",
+            "votes": "integer"
+          }
+        }
+      }
+    }
   }
 }

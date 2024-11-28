@@ -1,14 +1,17 @@
 const endpointsJson = require("../../endpoints.json");
 const articles = require("../data/test-data/articles");
-const { checkArticleExists } = require("./api.articles.model");
+const { checkArticleExists } = require("./api.comments.model"); // Use checkArticleExists from api.comments.model.js
+
 const {
   selectTopics,
   selectArticle,
   selectAllArticles,
 } = require("./api.model");
-const { selectComments } = require("./api.comments.model");
+const { selectComments, addComment } = require("./api.comments.model");
 
 console.log("in controller");
+
+const isValidId = (id) => !isNaN(id) && Number.isInteger(parseFloat(id));
 
 exports.getApi = (req, res) => {
   console.log(endpointsJson, "<--- endpoints json");
@@ -42,13 +45,17 @@ exports.getAllArticles = (req, res, next) => {
 
 exports.getArticleById = (req, res, next) => {
   const { article_id } = req.params;
-  selectArticle(article_id)
+
+  if (!isValidId(article_id)) {
+    return res.status(400).send({ msg: "Invalid Article ID" });
+  }
+
+  checkArticleExists(article_id)
+    .then(() => selectArticle(article_id))
     .then((article) => {
-      console.log(article, "<--article in controller");
       if (article.length === 0 || !article) {
         const error = new Error("Not Found");
         error.status = 404;
-        console.log(error, "<--err in the controller");
         return next(error);
       }
       res.status(200).send({ article: article[0] });
@@ -58,16 +65,30 @@ exports.getArticleById = (req, res, next) => {
 
 exports.getComments = (req, res, next) => {
   const { article_id } = req.params;
+  if (!isValidId(article_id)) {
+    return res.status(400).send({ msg: "Invalid Article ID" });
+  }
   selectComments(article_id)
     .then((comments) => {
-      console.log(comments, "<--article in controller");
       if (comments.length === 0 || !comments) {
         const error = new Error("Not Found");
         error.status = 404;
-        console.log(error, "<--err in the controller");
         return next(error);
       }
       res.status(200).send({ comments });
+    })
+    .catch(next);
+};
+
+exports.postComment = (req, res, next) => {
+  const { article_id } = req.params;
+  const comment = req.body;
+  if (!isValidId(article_id)) {
+    return res.status(400).send({ msg: "Invalid Article ID" });
+  }
+  addComment(article_id, comment)
+    .then((newComment) => {
+      res.status(201).send({ comment: newComment });
     })
     .catch(next);
 };

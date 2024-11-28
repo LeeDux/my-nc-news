@@ -1,4 +1,4 @@
-const db = require("../connection");
+/* const db = require("../connection");
 
 exports.checkArticleExists = (article_id) => {
   return db
@@ -8,4 +8,4 @@ exports.checkArticleExists = (article_id) => {
         return Promise.reject({ status: 404, msg: "Not Found" });
       }
     });
-};
+}; */
