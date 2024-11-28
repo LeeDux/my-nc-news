@@ -1,13 +1,16 @@
 const express = require("express");
 const app = express();
 app.use(express.json());
+
 const {
   getApi,
   getTopics,
   getArticleById,
   getAllArticles,
   getComments,
+  postComment,
 } = require("../db/seeds/api.controller");
+
 console.log("I am in app");
 
 app.get("/api", getApi);
@@ -20,26 +23,29 @@ app.get("/api/articles/:article_id", getArticleById);
 
 app.get("/api/articles/:article_id/comments", getComments);
 
+app.post("/api/articles/:article_id/comments", postComment);
+
+// Error handling middleware
 app.all("*", (req, res) => {
   res.status(404).send({ msg: "Not Found" });
 });
 
 app.use((err, req, res, next) => {
   console.error(err);
+
   if (err.code === "22P02") {
-    res.status(400).send({ msg: "Bad Request" });
+    return res.status(400).send({ msg: "Bad Request" });
   }
+
   if (err.status && err.msg) {
-    res.status(err.status).send({ err: msg });
+    return res.status(err.status).send({ msg: err.msg });
   }
 
   if (err.status === 400) {
-    console.error(err);
     return res.status(400).send({ msg: "Bad Request" });
   }
 
   if (err.status === 404) {
-    console.error(err);
     return res.status(404).send({ msg: "Not Found" });
   }
 

@@ -68,6 +68,24 @@ error handling in the controller getComments function and in the app with app.us
 test that the comments relating to the article_id are all recieved and in descending order.
 tests that comments is an array of objects containing the correct keys.
 
+POST /api/articles/:article_id/comments
+
+endpoint added to app.js file
+
+model updated with the following functions:
+checkArticleExists checks article data to make sure article exists, else rejects with 404
+checkUserExists - checks user data to make sure user exists, else rejects with 404
+addCommentToDataBase - uses sql query to add comment
+validation added in controller with isValid function to check article_id is a number. Added to getArticle_iD and getComment_iD
+
+validation added to selectArticle function in the model to verify valid article_id.
+
+The above functions will be envoked by addComment function
+
+Tests that a new comment will be added and tests the return of an object containing the correct keys.
+Tests for 404 error if a non existent user tries to post
+Test for 404 error if article does not exist
+
 ---
 
 This portfolio project was created as part of a Digital Skills Bootcamp in Software Engineering provided by [Northcoders](https://northcoders.com/)

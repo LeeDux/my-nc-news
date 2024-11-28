@@ -82,7 +82,7 @@ describe("Get /api/articles/:article_id", () => {
       .get("/api/articles/2024")
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe("Not Found");
+        expect(body.msg).toBe("Article not found");
       });
   });
 });
@@ -143,6 +143,60 @@ describe("getComments", () => {
           const nextComment = new Date(comments[i + 1].created_at);
           expect(currentComment >= nextComment).toBe(true);
         }
+      });
+  });
+});
+
+describe("post comment", () => {
+  test("201: responds with newly created comment object", () => {
+    const newComment = {
+      username: "butter_bridge",
+      body: "I must say, I found it quite delightful.",
+    };
+    return request(app)
+      .post("/api/articles/2/comments")
+      .send(newComment)
+      .then(({ body: { comment } }) => {
+        console.log(comment);
+        expect(comment).toEqual(
+          expect.objectContaining({
+            comment_id: expect.any(Number),
+            body: "I must say, I found it quite delightful.",
+            article_id: 2,
+            author: "butter_bridge",
+            votes: 0,
+            created_at: expect.any(String),
+          })
+        );
+      });
+  });
+  test("404: responds with error if user does not exist", () => {
+    const newComment = {
+      username: "madeUp_user",
+      body: "This is a comment from a made up user.",
+    };
+
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send(newComment)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("User not found");
+      });
+  });
+
+  test("404: responds with error if article does not exist", () => {
+    const newComment = {
+      username: "butter_bridge",
+      body: "This is a comment for a non-existent article.",
+    };
+
+    return request(app)
+      .post("/api/articles/2024/comments")
+      .send(newComment)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Article not found");
       });
   });
 });
