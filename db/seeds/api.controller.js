@@ -38,7 +38,8 @@ exports.getTopics = (req, res, next) => {
 };
 
 exports.getAllArticles = (req, res, next) => {
-  selectAllArticles()
+  const { sort_by = "created_at", order = "desc" } = req.query;
+  selectAllArticles(sort_by, order)
     .then((articles) => {
       console.log(articles, "<---articles fetched should be 13");
       res.status(200).send({ articles });
