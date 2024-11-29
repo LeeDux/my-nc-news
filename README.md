@@ -138,6 +138,26 @@ test for correct response
 returns 404 Not Found: If the users are not available or cannot be fetched from the database.
 500 Internal Server Error: If there is an issue with the server or database connection.
 
+9. -Feature request for "/api/articles"
+
+Controller Updates:
+
+    Added functionality to handle the sort_by and order query parameters in the /api/articles endpoint.
+    sort_by: Allows the user to specify a column by which the articles should be sorted (e.g., title, created_at, votes). Defaults to created_at.
+    order: Allows the user to specify the sort order, either asc (ascending) or desc (descending). Defaults to desc.
+    If the sort_by or order parameters are invalid, the controller returns a 400 status code with an appropriate error message.
+
+Model Updates:
+
+    Updated the selectAllArticles function to dynamically adjust the SQL query based on the sort_by and order parameters.
+    If no parameters are provided, the query defaults to sorting articles by created_at in descending order.
+    If valid parameters are provided, the query sorts the articles accordingly (e.g., by title or votes).
+
+tests:
+Test for sorting by title in ascending order: Checks if the articles are sorted alphabetically by title.
+Test for invalid query parameters: Ensures that invalid sort_by or order values return a 400 error with the correct error message.
+Test for default sorting: Ensures that when no sort_by or order is provided, the articles are sorted by created_at in descending order.
+
 ##
 
 This portfolio project was created as part of a Digital Skills Bootcamp in Software Engineering provided by [Northcoders](https://northcoders.com/)
