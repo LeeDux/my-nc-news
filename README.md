@@ -158,6 +158,15 @@ Test for sorting by title in ascending order: Checks if the articles are sorted 
 Test for invalid query parameters: Ensures that invalid sort_by or order values return a 400 error with the correct error message.
 Test for default sorting: Ensures that when no sort_by or order is provided, the articles are sorted by created_at in descending order.
 
+10. Feature update
+    Filtering Articles by Topic:
+
+        Added a topic query parameter to filter articles by their topic.
+        If the topic query is provided, only articles with the matching topic will be returned.
+        If no topic query is provided, all articles are returned.
+
+        tests articles can be filtered by topic and returns
+
 ##
 
 This portfolio project was created as part of a Digital Skills Bootcamp in Software Engineering provided by [Northcoders](https://northcoders.com/)
