@@ -252,3 +252,27 @@ describe("PATCH /api/articles/:article_id", () => {
       });
   });
 });
+
+describe("DELETE /api/comments/:comment_id", () => {
+  test("should delete a comment when given a valid comment_id", () => {
+    return request(app).delete(`/api/comments/1`).expect(204); // Status 204 with no content
+  });
+
+  test("should return 404 if the comment_id does not exist", () => {
+    return request(app)
+      .delete(`/api/comments/372`)
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("Comment not found");
+      });
+  });
+
+  test("should return 400 if the comment_id is not a valid number", () => {
+    return request(app)
+      .delete("/api/comments/not-a-number")
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Bad Request");
+      });
+  });
+});

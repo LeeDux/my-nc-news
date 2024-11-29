@@ -7,7 +7,11 @@ const {
   selectArticle,
   selectAllArticles,
 } = require("./api.model");
-const { selectComments, addComment } = require("./api.comments.model");
+const {
+  selectComments,
+  addComment,
+  deleteComment,
+} = require("./api.comments.model");
 const { updateVotes } = require("./api.articles.model");
 
 console.log("in controller");
@@ -107,6 +111,16 @@ exports.patchVotes = (req, res, next) => {
   updateVotes(article_id, inc_votes)
     .then((updatedArticle) => {
       res.status(200).send({ article: updatedArticle });
+    })
+    .catch(next);
+};
+
+exports.deleteCommentByiD = (req, res, next) => {
+  const { comment_id } = req.params;
+
+  deleteComment(comment_id)
+    .then(() => {
+      res.status(204).send();
     })
     .catch(next);
 };
