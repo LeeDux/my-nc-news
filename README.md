@@ -122,6 +122,22 @@ Deleting an existing comment (status 204).
 Trying to delete a comment that does not exist (status 404).
 Trying to delete a comment with an invalid comment_id format (status 400).
 
+8. getUsers "/api/users"
+   Description:
+   This endpoint serves a list of all users in the system.
+
+Response:
+The response will be an array of user objects, each object containing the following properties:
+
+    username: The username of the user (string)
+    name: The name of the user (string)
+    avatar_url: The URL of the user's avatar image (string)
+
+Tests
+test for correct response
+returns 404 Not Found: If the users are not available or cannot be fetched from the database.
+500 Internal Server Error: If there is an issue with the server or database connection.
+
 ##
 
 This portfolio project was created as part of a Digital Skills Bootcamp in Software Engineering provided by [Northcoders](https://northcoders.com/)

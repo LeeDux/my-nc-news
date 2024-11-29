@@ -13,6 +13,7 @@ const {
   deleteComment,
 } = require("./api.comments.model");
 const { updateVotes } = require("./api.articles.model");
+const { selectUsers } = require("./api.users.model");
 
 console.log("in controller");
 
@@ -121,6 +122,19 @@ exports.deleteCommentByiD = (req, res, next) => {
   deleteComment(comment_id)
     .then(() => {
       res.status(204).send();
+    })
+    .catch(next);
+};
+
+exports.getUsers = (req, res, next) => {
+  selectUsers()
+    .then((users) => {
+      if (users.length === 0 || !users) {
+        const error = new Error("Not Found");
+        error.status = 404;
+        return next(error);
+      }
+      res.status(200).send({ users });
     })
     .catch(next);
 };
