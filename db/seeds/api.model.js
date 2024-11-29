@@ -23,7 +23,7 @@ exports.selectArticle = (article_id) => {
   });
 };
 
-exports.selectAllArticles = (sort_by = "created_at", order = "desc") => {
+exports.selectAllArticles = (topic, sort_by = "created_at", order = "desc") => {
   const validColumns = ["created_at", "votes", "title", "article_id", "author"];
   const validOrders = ["asc", "desc"];
 
@@ -35,7 +35,7 @@ exports.selectAllArticles = (sort_by = "created_at", order = "desc") => {
     return Promise.reject({ status: 400, msg: "Invalid order value" });
   }
 
-  const sqlQuery = `
+  let sqlQuery = `
     SELECT
       articles.article_id,
       articles.title,
@@ -47,11 +47,20 @@ exports.selectAllArticles = (sort_by = "created_at", order = "desc") => {
       articles.article_img_url
     FROM articles
     LEFT JOIN comments ON comments.article_id = articles.article_id
-    GROUP BY articles.article_id
-    ORDER BY ${sort_by} ${order}
   `;
 
-  return db.query(sqlQuery).then(({ rows }) => {
+  const queryValues = [];
+
+  if (topic) {
+    sqlQuery += ` WHERE articles.topic = $1`;
+    queryValues.push(topic);
+  }
+
+  // Append GROUP BY and ORDER BY clauses
+  sqlQuery += ` GROUP BY articles.article_id ORDER BY articles.${sort_by} ${order.toUpperCase()}`;
+
+  // Execute the query with the appropriate values
+  return db.query(sqlQuery, queryValues).then(({ rows }) => {
     return rows;
   });
 };

@@ -38,10 +38,15 @@ exports.getTopics = (req, res, next) => {
 };
 
 exports.getAllArticles = (req, res, next) => {
-  const { sort_by = "created_at", order = "desc" } = req.query;
-  selectAllArticles(sort_by, order)
+  const { topic, sort_by = "created_at", order = "desc" } = req.query;
+  selectAllArticles(topic, sort_by, order)
     .then((articles) => {
       console.log(articles, "<---articles fetched should be 13");
+      if (articles.length === 0) {
+        const error = new Error("Topic Not Found");
+        error.status = 404;
+        return next(error);
+      }
       res.status(200).send({ articles });
     })
     .catch((err) => {

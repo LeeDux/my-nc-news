@@ -113,8 +113,35 @@ describe("/api/articles", () => {
         }
       });
   });
-  describe("/api/articles sorting feature request", () => {
-    test("200: should respond with all articles sorted by title in ascending order", () => {
+  describe("/api/articles", () => {
+    test("200: should respond with all articles in descending order by default", () => {
+      return request(app)
+        .get("/api/articles")
+        .expect(200)
+        .then(({ body }) => {
+          const { articles } = body;
+          expect(Array.isArray(articles)).toBe(true);
+          expect(articles).toHaveLength(testData.articleData.length);
+          articles.forEach((article) => {
+            expect(article).toHaveProperty("title");
+            expect(article).toHaveProperty("topic");
+            expect(article).toHaveProperty("author");
+            expect(article).toHaveProperty("created_at");
+            expect(article).toHaveProperty("votes");
+            expect(article.votes).toBeDefined();
+            expect(article).toHaveProperty("comment_count");
+            expect(article).toHaveProperty("article_img_url");
+          });
+
+          for (let i = 0; i < articles.length - 1; i++) {
+            const currentArticle = new Date(articles[i].created_at);
+            const nextArticle = new Date(articles[i + 1].created_at);
+            expect(currentArticle >= nextArticle).toBe(true);
+          }
+        });
+    });
+
+    test("200: should respond with articles sorted by a specific column (sort_by=title, order=asc)", () => {
       return request(app)
         .get("/api/articles?sort_by=title&order=asc")
         .expect(200)
@@ -124,23 +151,29 @@ describe("/api/articles", () => {
           expect(articles).toHaveLength(testData.articleData.length);
 
           for (let i = 0; i < articles.length - 1; i++) {
-            const currentTitle = articles[i].title.toLowerCase();
-            const nextTitle = articles[i + 1].title.toLowerCase();
-            expect(currentTitle <= nextTitle).toBe(true);
+            const currentArticle = articles[i].title.toLowerCase();
+            const nextArticle = articles[i + 1].title.toLowerCase();
+            expect(currentArticle <= nextArticle).toBe(true);
           }
-
-          articles.forEach((article) => {
-            expect(article).toHaveProperty("title");
-            expect(article).toHaveProperty("topic");
-            expect(article).toHaveProperty("author");
-            expect(article).toHaveProperty("created_at");
-            expect(article).toHaveProperty("votes");
-            expect(article).toHaveProperty("comment_count");
-            expect(article).toHaveProperty("article_img_url");
-          });
         });
     });
-    test("400: should respond with an error for invalid sort_by column", () => {
+
+    test("200: should respond with articles sorted by votes in descending order (sort_by=votes, order=desc)", () => {
+      return request(app)
+        .get("/api/articles?sort_by=votes&order=desc")
+        .expect(200)
+        .then(({ body }) => {
+          const { articles } = body;
+          expect(Array.isArray(articles)).toBe(true);
+          expect(articles).toHaveLength(testData.articleData.length);
+
+          for (let i = 0; i < articles.length - 1; i++) {
+            expect(articles[i].votes >= articles[i + 1].votes).toBe(true);
+          }
+        });
+    });
+
+    test("400: should respond with error if an invalid sort_by parameter is provided", () => {
       return request(app)
         .get("/api/articles?sort_by=invalid_column&order=asc")
         .expect(400)
@@ -149,7 +182,7 @@ describe("/api/articles", () => {
         });
     });
 
-    test.only("400: should respond with an error for invalid order value", () => {
+    test("400: should respond with error if an invalid order parameter is provided", () => {
       return request(app)
         .get("/api/articles?sort_by=title&order=invalid_order")
         .expect(400)
@@ -158,7 +191,21 @@ describe("/api/articles", () => {
         });
     });
 
-    test.only("200: should respond with all articles sorted by created_at in descending order by default", () => {
+    test("200: should filter articles by topic", () => {
+      const topic = "cats";
+      return request(app)
+        .get(`/api/articles?topic=${topic}`)
+        .expect(200)
+        .then(({ body }) => {
+          const { articles } = body;
+          expect(Array.isArray(articles)).toBe(true);
+          articles.forEach((article) => {
+            expect(article.topic).toBe(topic);
+          });
+        });
+    });
+
+    test("200: should return all articles if no topic query is provided", () => {
       return request(app)
         .get("/api/articles")
         .expect(200)
@@ -166,22 +213,6 @@ describe("/api/articles", () => {
           const { articles } = body;
           expect(Array.isArray(articles)).toBe(true);
           expect(articles).toHaveLength(testData.articleData.length);
-
-          for (let i = 0; i < articles.length - 1; i++) {
-            const currentArticle = new Date(articles[i].created_at);
-            const nextArticle = new Date(articles[i + 1].created_at);
-            expect(currentArticle >= nextArticle).toBe(true);
-          }
-
-          articles.forEach((article) => {
-            expect(article).toHaveProperty("title");
-            expect(article).toHaveProperty("topic");
-            expect(article).toHaveProperty("author");
-            expect(article).toHaveProperty("created_at");
-            expect(article).toHaveProperty("votes");
-            expect(article).toHaveProperty("comment_count");
-            expect(article).toHaveProperty("article_img_url");
-          });
         });
     });
   });
