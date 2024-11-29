@@ -131,5 +131,26 @@
         "description": "The comment with the provided ID was not found."
       }
     }
+  },
+
+  "GET /api/users": {
+    "description": "Fetches all users.",
+    "responses": {
+      "200": {
+        "description": "Successfully retrieved a list of all users.",
+        "body": {
+          "users": [
+            {
+              "username": "The unique username of the user",
+              "name": "The name of the user",
+              "avatar_url": "The avatar URL of the user"
+            }
+          ]
+        }
+      },
+      "404": {
+        "description": "No users found or an error occurred."
+      }
+    }
   }
 }
