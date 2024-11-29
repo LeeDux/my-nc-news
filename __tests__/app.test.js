@@ -200,3 +200,55 @@ describe("post comment", () => {
       });
   });
 });
+
+describe("PATCH /api/articles/:article_id", () => {
+  test("should increment votes of article when given a possitive integer", () => {
+    return request(app)
+      .patch(`/api/articles/1`)
+      .send({ inc_votes: 5 })
+      .expect(200)
+      .then((response) => {
+        expect(response.body.article.votes).toBe(105);
+      });
+  });
+
+  test("should decrement the votes of an article when given a negative integer", () => {
+    return request(app)
+      .patch(`/api/articles/1`)
+      .send({ inc_votes: -3 })
+      .expect(200)
+      .then((response) => {
+        expect(response.body.article.votes).toBe(97);
+      });
+  });
+
+  test("should return a 400 error if inc_votes is not a number", () => {
+    return request(app)
+      .patch(`/api/articles/1`)
+      .send({ inc_votes: "not-a-number" })
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Bad Request");
+      });
+  });
+
+  test("should return a 404 error if article_id does not exist", () => {
+    return request(app)
+      .patch(`/api/articles/9999`)
+      .send({ inc_votes: 3 })
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("Article not found");
+      });
+  });
+
+  test("should return a 400 error if request body does not contain inc_votes", () => {
+    return request(app)
+      .patch(`/api/articles/1`)
+      .send({}) // Missing inc_votes
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Bad Request");
+      });
+  });
+});

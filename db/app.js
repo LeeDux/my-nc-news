@@ -9,6 +9,7 @@ const {
   getAllArticles,
   getComments,
   postComment,
+  patchVotes,
 } = require("../db/seeds/api.controller");
 
 console.log("I am in app");
@@ -25,7 +26,8 @@ app.get("/api/articles/:article_id/comments", getComments);
 
 app.post("/api/articles/:article_id/comments", postComment);
 
-// Error handling middleware
+app.patch("/api/articles/:article_id", patchVotes);
+
 app.all("*", (req, res) => {
   res.status(404).send({ msg: "Not Found" });
 });

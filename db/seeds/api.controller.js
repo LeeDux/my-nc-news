@@ -8,6 +8,7 @@ const {
   selectAllArticles,
 } = require("./api.model");
 const { selectComments, addComment } = require("./api.comments.model");
+const { updateVotes } = require("./api.articles.model");
 
 console.log("in controller");
 
@@ -89,6 +90,23 @@ exports.postComment = (req, res, next) => {
   addComment(article_id, comment)
     .then((newComment) => {
       res.status(201).send({ comment: newComment });
+    })
+    .catch(next);
+};
+
+exports.patchVotes = (req, res, next) => {
+  const { article_id } = req.params;
+  const { inc_votes } = req.body;
+
+  if (typeof inc_votes !== "number") {
+    const error = new Error("Invalid request");
+    error.status = 400;
+    return next(error);
+  }
+
+  updateVotes(article_id, inc_votes)
+    .then((updatedArticle) => {
+      res.status(200).send({ article: updatedArticle });
     })
     .catch(next);
 };
