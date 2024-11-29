@@ -10,6 +10,7 @@ const {
   getComments,
   postComment,
   patchVotes,
+  deleteCommentByiD,
 } = require("../db/seeds/api.controller");
 
 console.log("I am in app");
@@ -27,6 +28,8 @@ app.get("/api/articles/:article_id/comments", getComments);
 app.post("/api/articles/:article_id/comments", postComment);
 
 app.patch("/api/articles/:article_id", patchVotes);
+
+app.delete("/api/comments/:comment_id", deleteCommentByiD);
 
 app.all("*", (req, res) => {
   res.status(404).send({ msg: "Not Found" });

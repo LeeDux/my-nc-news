@@ -116,5 +116,20 @@
         "article_img_url": "URL to image"
       }
     }
+  },
+
+  "DELETE /api/comments/:comment_id": {
+    "description": "Deletes a comment by its comment_id.",
+    "params": {
+      "comment_id": "The unique ID of the comment to be deleted."
+    },
+    "responses": {
+      "204": {
+        "description": "Successfully deleted the comment, no content returned."
+      },
+      "404": {
+        "description": "The comment with the provided ID was not found."
+      }
+    }
   }
 }

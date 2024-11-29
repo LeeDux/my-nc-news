@@ -107,6 +107,21 @@ Invalid (non-numeric) - test that the vote type is integer
 
 Article not found - checks the article exists
 
-## Checks for missing inc_votes from the response body
+Checks for missing inc_votes from the response body
+
+7. DELETE "/api/comments/:comment_id"
+
+deleteComment added to the api.comments.model.js file
+Uses SQL query and relevent comment id as the req params. if invalid comment id it will reject the promise.
+
+deleteCommentByID added to the api.controller.js file
+takse comment_id as req.params and calls the dekete comment function in the model. responds with a status code of 204 No Content on successful deletion
+
+test
+Deleting an existing comment (status 204).
+Trying to delete a comment that does not exist (status 404).
+Trying to delete a comment with an invalid comment_id format (status 400).
+
+##
 
 This portfolio project was created as part of a Digital Skills Bootcamp in Software Engineering provided by [Northcoders](https://northcoders.com/)
