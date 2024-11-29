@@ -2,7 +2,7 @@
 
 You will need to create two .env files for your project: .env.test and .env.development. Into each, add PGDATABASE=, with the correct database name for that environment (see /db/setup.sql for the database names). Double check that these .env files are .gitignored.
 
-getAPI - This will retrieve all available endpoints on the API:
+1. getAPI - This will retrieve all available endpoints on the API:
 
 - api/topics
   -api/articles
@@ -32,7 +32,7 @@ Updated middleware in the controller to pass error to the global error handler.
 
 Added catch all route handler to app.js to catch invalid path. (source: https://www.geeksforgeeks.org/how-to-redirect-404-errors-to-a-page-in-express-js/)
 
-Get /api/articles
+2. Get /api/articles
 
 fetches articles data
 returns an array of objects in descending order by date.
@@ -44,7 +44,7 @@ Used Count and a Join to the comments data to add in comment count, GROUP BY is 
 Tests that it:
 responds with an array of object containing the correct keys and in descending order.
 
-Get /api/articles/:article_id
+3. Get /api/articles/:article_id
 
 app updated with get for the above endpoint.
 
@@ -57,7 +57,7 @@ test for 400 bad request
 test that the article is received and is defined
 tests that article is an object containing the correct keys
 
-Get /api/articles/:article_id/comments
+4. Get /api/articles/:article_id/comments
 
 model: selectComments takse article_id as its argument to find comments for the relevant article. It uses sqlQuery to select keys from comments and orders in descending order.
 
@@ -68,7 +68,7 @@ error handling in the controller getComments function and in the app with app.us
 test that the comments relating to the article_id are all recieved and in descending order.
 tests that comments is an array of objects containing the correct keys.
 
-POST /api/articles/:article_id/comments
+5. POST /api/articles/:article_id/comments
 
 endpoint added to app.js file
 
@@ -86,6 +86,27 @@ Tests that a new comment will be added and tests the return of an object contain
 Tests for 404 error if a non existent user tries to post
 Test for 404 error if article does not exist
 
----
+6. PATCH /api/articles/:article_id
+
+endpoint added to app.js
+
+updateVotes function added to the articles.model.js file.
+updateVotes: which accepts article_id and inc_votes (the value to increment/decrement the votes by).
+It updates the votes in the articles table and returns the updated article.
+If the article with the given article_id is not found, it throws a 404 error with a custom message.
+
+patchVotes function added to api.controller.js file.
+Request Body Validation: We check if inc_votes is a valid number. If not, we return a 400 Bad Request error with a message indicating that the request body is invalid.
+Update Article: We call the updateVotes function from the articles model to update the article's votes and return the updated article.
+Error Handling: Any errors (e.g., article not found) are passed to the error handler.
+
+Tests:
+Increment & decrement votes - sends patch request to check the votes increment an decrement correctly.
+
+Invalid (non-numeric) - test that the vote type is integer
+
+Article not found - checks the article exists
+
+## Checks for missing inc_votes from the response body
 
 This portfolio project was created as part of a Digital Skills Bootcamp in Software Engineering provided by [Northcoders](https://northcoders.com/)

@@ -47,6 +47,34 @@
     }
   },
 
+  "GET /api/articles/:article_id/comments": {
+    "description": "Fetches all comments for a specific article by its ID",
+    "params": {
+      "article_id": "The unique ID of the article (must be a number)"
+    },
+    "queries": [],
+    "exampleResponse": {
+      "comments": [
+        {
+          "comment_id": 1,
+          "votes": 10,
+          "created_at": "2024-11-25T10:00:00Z",
+          "author": "user1",
+          "body": "Great article!",
+          "article_id": 1
+        },
+        {
+          "comment_id": 2,
+          "votes": 5,
+          "created_at": "2024-11-25T11:00:00Z",
+          "author": "user2",
+          "body": "Very insightful!",
+          "article_id": 1
+        }
+      ]
+    }
+  },
+
   "POST /api/articles/:article_id/comments": {
     "description": "Adds a comment to the specified article.",
     "request_body": {
@@ -64,6 +92,28 @@
             "votes": "integer"
           }
         }
+      }
+    }
+  },
+
+  "PATCH /api/articles/:article_id": {
+    "description": "Updates an article's vote count by article_id",
+    "params": {
+      "article_id": "The unique ID of the article (must be a number)"
+    },
+    "request_body": {
+      "inc_votes": "integer (required) - The amount to increment/decrement the votes by."
+    },
+    "exampleResponse": {
+      "article": {
+        "article_id": 1,
+        "title": "Article Title",
+        "author": "Author Name",
+        "body": "Content of the article",
+        "topic": "Topic",
+        "created_at": "2024-11-25T10:00:00Z",
+        "votes": 101,
+        "article_img_url": "URL to image"
       }
     }
   }
