@@ -24,7 +24,14 @@ exports.selectArticle = (article_id) => {
 };
 
 exports.selectAllArticles = (topic, sort_by = "created_at", order = "desc") => {
-  const validColumns = ["created_at", "votes", "title", "article_id", "author"];
+  const validColumns = [
+    "created_at",
+    "votes",
+    "title",
+    "article_id",
+    "author",
+    "body",
+  ];
   const validOrders = ["asc", "desc"];
 
   if (!validColumns.includes(sort_by)) {
@@ -44,7 +51,8 @@ exports.selectAllArticles = (topic, sort_by = "created_at", order = "desc") => {
       articles.created_at,
       COALESCE(articles.votes, 0) AS votes,
       COALESCE(COUNT(comments.comment_id), 0) AS comment_count,  
-      articles.article_img_url
+      articles.article_img_url,
+      articles.body
     FROM articles
     LEFT JOIN comments ON comments.article_id = articles.article_id
   `;
