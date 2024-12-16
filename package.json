@@ -2,13 +2,13 @@
   "name": "be-nc-news",
   "version": "1.0.0",
   "description": "bc-nc-news",
-  "main": "./db/app.listen.js",
+  "main": "./app.listen.js",
   "scripts": {
     "setup-dbs": "psql -f ./db/setup.sql",
     "seed": "node ./db/seeds/run-seed.js",
     "test": "jest",
     "prepare": "husky install",
-    "start": "node ./db/app.listen.js",
+    "start": "node ./app.listen.js",
     "seed-prod": "NODE_ENV=production npm run seed"
   },
   "repository": {
@@ -30,6 +30,7 @@
     "supertest": "^7.0.0"
   },
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^16.0.0",
     "express": "^4.21.1",
     "pg": "^8.13.1"
