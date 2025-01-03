@@ -1,6 +1,17 @@
 # Northcoders News API
 
-You will need to create two .env files for your project: .env.test and .env.development. Into each, add PGDATABASE=, with the correct database name for that environment (see /db/setup.sql for the database names). Double check that these .env files are .gitignored.
+This project is a RESTful API designed to interact with articles, comments, topics, and users. It provides endpoints to retrieve, add, update, and delete data, with built-in error handling and validation mechanisms to ensure data integrity and smooth operation.
+
+The API supports the following resources:
+
+    Articles: Retrieve, update, and delete articles, as well as manage article votes and comments.
+    Topics: Fetch and filter articles by specific topics.
+    Comments: Add, retrieve, and delete comments related to articles.
+    Users: Access a list of all users in the system.
+
+The API also includes advanced features such as sorting, filtering, and comprehensive error handling, including custom error codes for common issues like invalid data and missing resources.
+
+This project is part of a Software Engineering bootcamp portfolio at Northcoders.
 
 1. getAPI - This will retrieve all available endpoints on the API:
 
